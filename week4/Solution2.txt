@@ -1,0 +1,75 @@
+//https://www.hackerrank.com/challenges/truck-tour/problem
+
+import java.io.*;
+import java.math.*;
+import java.text.*;
+import java.util.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    /*
+     * Complete the truckTour function below.
+     */
+    static int truckTour(int[][] petrolpumps) {
+        /*
+         * Write your code here.
+         */
+         Queue<GasStation> queue = new LinkedList<>();
+         for (int i = 0; i < petrolpumps.length; i++) {
+             queue.add(new GasStation(petrolpumps[i][0], petrolpumps[i][1]));
+         }
+
+         int start = 0, passed = 0,  gas = 0;
+        while (passed < petrolpumps.length) {
+            GasStation st = queue.poll();
+            gas += st.gas;
+
+            if (gas >= st.next) {
+                passed += 1;
+                gas -= st.next;
+            } else {
+                start += passed + 1;
+                passed = 0; gas = 0;
+            }
+            queue.add(st);
+        }
+
+        return start;
+    }
+
+    static class GasStation {
+        int gas, next;
+
+        GasStation(int gas, int next) {
+            this.gas = gas;
+            this.next = next;
+        }
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int n = Integer.parseInt(scanner.nextLine().trim());
+
+        int[][] petrolpumps = new int[n][2];
+
+        for (int petrolpumpsRowItr = 0; petrolpumpsRowItr < n; petrolpumpsRowItr++) {
+            String[] petrolpumpsRowItems = scanner.nextLine().split(" ");
+
+            for (int petrolpumpsColumnItr = 0; petrolpumpsColumnItr < 2; petrolpumpsColumnItr++) {
+                int petrolpumpsItem = Integer.parseInt(petrolpumpsRowItems[petrolpumpsColumnItr].trim());
+                petrolpumps[petrolpumpsRowItr][petrolpumpsColumnItr] = petrolpumpsItem;
+            }
+        }
+
+        int result = truckTour(petrolpumps);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedWriter.close();
+    }
+}
