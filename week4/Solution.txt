@@ -1,0 +1,53 @@
+// https://www.hackerrank.com/challenges/queue-using-two-stacks/problem
+
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        Queue<Integer> queue = new Queue<>();
+
+        int q = sc.nextInt();
+        for (int i = 0; i < q; i++) {
+            int type = sc.nextInt();
+            if (type == 1) {
+                queue.enqueue(sc.nextInt());
+            } else if (type == 2) {
+                queue.dequeue();
+            } else if (type == 3) {
+                System.out.println(queue.peek());
+            }
+        }
+
+        sc.close();
+    }
+}
+
+class Queue<T> {
+    Stack<T> leftStack = new Stack<>();
+    Stack<T> rightStack = new Stack<>();
+
+    public void enqueue(T item) {
+        leftStack.push(item);
+    }
+
+    public T dequeue() {
+        adjustIfNeeded();
+        return rightStack.pop();
+    }
+
+    public T peek() {
+        adjustIfNeeded();
+        return rightStack.peek();
+    }
+
+    private void adjustIfNeeded() {
+        if (rightStack.empty()) {
+            while (!leftStack.empty()) {
+                rightStack.push(leftStack.pop());
+            }
+        }
+    }
+}
